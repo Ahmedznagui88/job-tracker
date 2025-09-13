@@ -1,6 +1,6 @@
 "use client";
-import Timer from "@/app/components/Timer";
-import WorkingProgress from "@/app/components/workingProgress";
+import Timer from "@/components/Timer";
+import WorkingProgress from "@/components/workingProgress";
 import { useState } from "react";
 
 interface Session {
@@ -47,11 +47,7 @@ export default function Home() {
   return (
     <main className="page">
       <h1 className="title">Study Tracker</h1>
-      <Timer
-        onStop={handleTimerStop}
-        resumeData={resumeData}
-        onResumeComplete={() => setResumeData(null)}
-      />
+      <Timer />
 
       <h3 className="test">Working Progress</h3>
       <section className="section">
@@ -64,3 +60,4 @@ export default function Home() {
     </main>
   );
 }
+

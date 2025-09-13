@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { createSession, updateSession } from '../lib/action'
 
 interface TimerProps {
   projectName?: string;
@@ -10,6 +11,7 @@ interface TimerProps {
   onResumeComplete?: () => void;
 }
 
+
 const Timer: React.FC<TimerProps> = ({
   projectName,
   isRunning,
@@ -17,10 +19,12 @@ const Timer: React.FC<TimerProps> = ({
   onStop,
   resumeData,
   onResumeComplete,
+
 }) => {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [projectInput, setProjectInput] = useState<string>("");
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -56,23 +60,47 @@ const Timer: React.FC<TimerProps> = ({
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const handleStart = () => setIsActive(true);
-  const handleStop = () => {
-    console.log("ProjectInput value:", projectInput); // DEBUG
-    if (projectInput.trim() === "") {
-      alert("Please enter a project name before stopping the timer.");
+  const handleStart = async () => {
+    if (projectInput.trim() === '') {
+      alert('Please enter a project name before starting the timer.');
       return;
     }
-
-    // Invia i dati al parent
-    onStop?.({
-      projectName: projectInput.trim(),
-      seconds: seconds,
-    });
-
-    setIsActive(false);
-    setSeconds(0);
-    setProjectInput("");
+  
+    try {
+      // Crea sessione nel database
+      const sessionId = await createSession(projectInput.trim());
+      setCurrentSessionId(sessionId);
+      
+      // Avvia timer
+      setIsActive(true);
+    } catch (error) {
+      console.error('Error creating session:', error);
+      alert('Failed to start session. Please try again.');
+    }
+  };
+  
+  const handleStop = async () => {
+    if (!currentSessionId) {
+      alert('No active session found.');
+      return;
+    }
+  
+    try {
+      // Salva sessione nel database
+      await updateSession(currentSessionId, seconds);
+      
+      // Reset timer
+      setIsActive(false);
+      setSeconds(0);
+      setProjectInput('');
+      setCurrentSessionId(null);
+      
+      // Opzionale: notifica successo
+      console.log('Session saved successfully');
+    } catch (error) {
+      console.error('Error saving session:', error);
+      alert('Failed to save session. Please try again.');
+    }
   };
 
   return (

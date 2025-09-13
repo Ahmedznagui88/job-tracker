@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "../app/styling/working.css"
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -14,7 +13,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #2e2e2e;
+    --background: #000000;
     --foreground: #ededed;
   }
 }
@@ -23,7 +22,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  transition: 0.6s;
+  transition: 0.3s;
 }
 
 .title {
