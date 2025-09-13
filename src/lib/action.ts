@@ -3,7 +3,6 @@
 import { prisma } from './db'
 
 export async function createSession(projectName: string) {
-  // Trova o crea il progetto
   const project = await prisma.project.upsert({
     where: { name: projectName },
     update: {},
@@ -35,9 +34,9 @@ export async function updateSession(sessionId: string, duration: number) {
 
 export async function getPausedSessions() {
   return await prisma.session.findMany({
-    where: {
+/*     where: {
       duration: 0 // Sessioni non completate
-    },
+    }, */
     include: {
       project: true
     },
@@ -51,4 +50,12 @@ export async function deleteSession(sessionId: string) {
   await prisma.session.delete({
     where: { id: sessionId }
   })
+}
+
+export async function getAllSessions() {
+  // Recupera TUTTE le sessioni
+  return await prisma.session.findMany({
+      include: { project: true },
+      orderBy: { startTime: 'desc' }
+  });
 }
