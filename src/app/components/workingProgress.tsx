@@ -42,11 +42,11 @@ const WorkingProgress: React.FC<WorkingProgressProps> = ({
       {/* <h3 >Working Progress</h3> */}
       {sessions.map((session) => (
         <div key={session.id} className="navTop2">
-          <div className="">
+          <div className="projectName">
             <span className="project-name">{session.projectName}</span>
           </div>
-            <span className="session-time">{formatTime(session.accumulatedSeconds)}</span>
           <div className="session-actions">
+            <span className="session-time">{formatTime(session.accumulatedSeconds)}</span>
             <button onClick={() => onResumeSession(session)} className="btn">
               Start
             </button>

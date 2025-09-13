@@ -23,6 +23,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: 0.6s;
 }
 
 .title {
@@ -137,3 +138,12 @@ body {
   align-items: center;
   gap: 50px;
 }
+
+/* .session-time{
+  border: solid #ccc;
+}
+
+.projectName{
+  text-align: center;
+  border: solid #ccc;
+} */

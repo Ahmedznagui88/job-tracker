@@ -5,7 +5,9 @@ interface TimerProps {
   projectName?: string;
   isRunning?: boolean;
   onStart?: () => void;
-  onStop?: (sessionData: { projectName: string; seconds: number }) => void; // NUOVO
+  onStop?: (sessionData: { projectName: string; seconds: number }) => void;
+  resumeData?: {projectName: string; seconds: number} | null;
+  onResumeComplete?: () => void;
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -13,6 +15,8 @@ const Timer: React.FC<TimerProps> = ({
   isRunning,
   onStart,
   onStop,
+  resumeData,
+  onResumeComplete,
 }) => {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -31,6 +35,16 @@ const Timer: React.FC<TimerProps> = ({
       if (interval) clearInterval(interval);
     };
   }, [isActive]);
+
+  useEffect(() => {
+    if (resumeData) {
+      setProjectInput(resumeData.projectName);
+      setSeconds(resumeData.seconds);
+      setIsActive(true);
+      onResumeComplete?.();
+    }
+  }, [resumeData, onResumeComplete]);
+  
 
   const formatTime = (totalSeconds: number): string => {
     const hours = Math.floor(totalSeconds / 3600);
